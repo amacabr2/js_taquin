@@ -10,13 +10,32 @@
         <meta name="author" content="">
         <link rel="icon" href="">
         <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="css/menu.css">
         <title></title>
     </head>
 
     <body>
 
-        <nav class="barre_menu">
-            <div class="menu_title">Taquin</div>
+        <nav>
+            <label for="menu-mobile" class="menu-mobile">Menu</label>
+            <input type="checkbox" id="menu-mobile" name="menu-mobile" role="button"></input>
+            <ul>
+                <li class="menu1"><a href="#">Nouvelle partie</a>
+                    <ul class="submenu">
+                        <li><a href="#">3x3</a></li>
+                        <li><a href="#">4x4</a></li>
+                        <li><a href="#">5x5</a></li>
+                    </ul>
+                </li>
+                <li class="menu2"><a href="#">Meilleurs scores</a>
+                    <ul class="submenu">
+                        <li><a href="#">3x3</a></li>
+                        <li><a href="#">4x4</a></li>
+                        <li><a href="#">5x5</a></li>
+                    </ul>
+                </li>
+                <li class="menu3"><a href="#">A propos</a></li>
+            </ul>
         </nav>
 
         <div class="plateau">
