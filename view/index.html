@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-COMPATIBLE" content="IE=edge">
+        <meta name="viewport" content="width=device, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <link rel="icon" href="">
+        <link rel="stylesheet" href="../css/style.css">
+        <link rel="stylesheet" href="../css/menu.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <title></title>
+    </head>
+
+    <body onload="register()">
+
+        <section class="nav">
+            <label for="menu-mobile" class="menu-mobile">Menu</label>
+            <input type="checkbox" id="menu-mobile" name="menu-mobile" role="button"></input>
+            <ul>
+                <li class="menu1"><a href="#">Nouvelle partie</a>
+                    <ul class="submenu">
+                        <li><a href="#">3x3</a></li>
+                        <li><a href="#">4x4</a></li>
+                        <li><a href="#">5x5</a></li>
+                    </ul>
+                </li>
+                <li class="menu2"><a href="#">Meilleurs scores</a>
+                    <ul class="submenu">
+                        <li><a href="#">3x3</a></li>
+                        <li><a href="#">4x4</a></li>
+                        <li><a href="#">5x5</a></li>
+                    </ul>
+                </li>
+                <li class="menu3"><a data-toggle="modal" data-target="#choixImg">Choix de l'image</a></li>
+                <li class="menu4"><a href="#">A propos</a></li>
+            </ul>
+        </section>
+
+        <section class="container">
+
+            <div id="choixImg" class="modal fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+                <div class="modal-dialog">
+
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close" aria-hidden="true">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel">Choisissez l'image que vous voulez</h4>
+                        </div>
+
+                        <div class="modal-body" id="listImgInModal">
+
+                        </div>
+
+                        <div class="modal-footer">
+                            <button class="btn btn-alert" data-dismiss="modal">Fermer</button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-offset-3 col-lg-6" id="plateau">
+
+            </div>
+
+        </section>
+
+        <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <script src="../js/taquin.js"></script>
+
+    </body>
+
+</html>
