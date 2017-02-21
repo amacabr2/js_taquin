@@ -1,7 +1,8 @@
 let xhr;
-let imgChoisit;
+let imgChoisit = "choix2.jpeg";
 
 const plateau = document.getElementById('plateau');
+const plateauImg = document.getElementById('plateau-img');
 const choixImage = document.getElementById('choixImage');
 const listImgInModal = document.getElementById('listImgInModal');
 
@@ -16,6 +17,7 @@ function register() {
     else if (window.ActiveXObject) xhr = new ActiveXObject("Microsoft.XMLHTTP");
 
     rechercheImg();
+    remplirPlateau();
 
 }
 
@@ -41,6 +43,7 @@ function rechercheImg() {
  * Ajoute les images au modal
  */
 function addImgInModal(listImg) {
+    console.log(listImg);
     let container = document.createElement('div');
     container.className = "container-fluid";
     for (let i = 0; i < listImg.length; i++) {
@@ -52,6 +55,7 @@ function addImgInModal(listImg) {
         let img = document.createElement('img');
         img.className = "img-responsive img-choix";
         img.src = "../img/jeu/" + listImg[i];
+        console.log(img.src);
         img.setAttribute("onclick", `choixImg("${listImg[i]}")`);
         img.setAttribute("data-dismiss", "modal");
         col.appendChild(img);
@@ -61,6 +65,15 @@ function addImgInModal(listImg) {
     listImgInModal.appendChild(container)
 }
 
+/**
+ * Enregistre le choix de l'image
+ * @param img
+ */
 function choixImg(img) {
-    alert(img);
+    imgChoisit = img;
+    remplirPlateau();
+}
+
+function remplirPlateau() {
+    plateauImg.src = `../img/jeu/${imgChoisit}`;
 }

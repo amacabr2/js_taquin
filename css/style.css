@@ -14,7 +14,16 @@ body {
 }
 
 #plateau {
-    background-color: #a44f52;
+    margin: 5px;
+    border: 2px red solid;
+    border-radius: 10px;
+    background-size: cover;
+}
+
+#plateau-img {
+    border-radius: 10px;
+    width: 100%;
+    height: 100%;
 }
 
 .img-choix {
