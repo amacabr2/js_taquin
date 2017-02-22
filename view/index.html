@@ -23,9 +23,9 @@
             <ul>
                 <li class="menu1"><a href="#">Nouvelle partie</a>
                     <ul class="submenu">
-                        <li><a href="#">3x3</a></li>
-                        <li><a href="#">4x4</a></li>
-                        <li><a href="#">5x5</a></li>
+                        <li><a onclick="setTaille(3)">3x3</a></li>
+                        <li><a onclick="setTaille(4)">4x4</a></li>
+                        <li><a onclick="setTaille(5)">5x5</a></li>
                     </ul>
                 </li>
                 <li class="menu2"><a href="#">Meilleurs scores</a>
@@ -72,6 +72,12 @@
             <div class="col-lg-offset-3 col-lg-6">
                 <div id="plateau">
                     <img id="plateau-img">
+                </div>
+            </div>
+
+            <div class="col-lg-3">
+                <div class="jumbotron" id="info">
+
                 </div>
             </div>
 
