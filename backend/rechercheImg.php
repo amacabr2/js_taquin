@@ -13,7 +13,7 @@
         $list = [];
         if ($dossier = opendir('../img/jeu')) {
             while(false !== ($fichier = readdir($dossier))) {
-                if ($fichier != '.' and $fichier != '..') {
+                if ($fichier != '.' and $fichier != '..' and $fichier != 'vide.jpeg' and $fichier != 'choix1' and $fichier != 'choix2' and $fichier != 'choix3') {
                     array_push($list, $fichier);
                 }
             }
