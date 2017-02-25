@@ -1,5 +1,4 @@
 const plateau = document.getElementById('plateau');
-const plateauImg = document.getElementById('plateau-img');
 const choixImage = document.getElementById('choixImage');
 const listImgInModal = document.getElementById('listImgInModal');
 const info = document.getElementById('info');
@@ -24,27 +23,21 @@ let resolu = false;
 
 // Suit le mouvement de la souris pour savoir ou on clique
 puzzle.onclick = function(e) {
+
     caseClique.x = Math.floor((e.pageX - 410) / tailleTuile);
     caseClique.y = Math.floor((e.pageY - 90) / tailleTuile);
-   /* console.log("e.pageX = " + e.pageX);
-    console.log("e.pageY = " + e.pageY);
-    console.log("offsetLeft = " + this.offsetLeft);
-    console.log("offsetTop = " + this.offsetLeft);
-    console.log("caseClique.x = " + caseClique.x);
-    console.log("caseClique.y = " + caseClique.y);
-    console.log("caseVide.x = " + caseVide.x);
-    console.log("caseVide.y = " + caseVide.y);
-    console.log("------------------------------------------------------------------------------------------------------");*/
+
     if (distance(caseClique.x, caseClique.y, caseVide.x, caseVide.y) == 1) {
         deplaceTuile(caseVide, caseClique);
         drawPuzzle();
     }
+
     if (resolu) {
-        //setTimeout(function() {alert("You resolu it!");}, 500);
         clear();
         remplirPlateau();
         demandePseudo();
     }
+
 };
 
 /**
@@ -88,23 +81,31 @@ function rechercheImg() {
  * Ajoute les images au modal
  */
 function addImgInModal(listImg) {
+
     let container = document.createElement('div');
     container.className = "container-fluid";
+
     for (let i = 0; i < listImg.length; i++) {
+
         let row = document.createElement('div');
         row.className = "row";
+
         let col = document.createElement('div');
         col.className = "col-offset-lg-2 col-lg-8";
         col.style.width = '100%';
+
         let img = document.createElement('img');
         img.className = "img-responsive img-choix";
         img.src = "../img/jeu/" + listImg[i];
         img.setAttribute("onclick", `choixImg("${listImg[i]}")`);
         img.setAttribute("data-dismiss", "modal");
+
         col.appendChild(img);
         row.appendChild(col);
         container.appendChild(row);
+
     }
+
     listImgInModal.appendChild(container)
 }
 
@@ -202,6 +203,7 @@ function setTab() {
     caseVide.x = tabPartImg[taille - 1][taille - 1].x;
     caseVide.y = tabPartImg[taille - 1][taille - 1].y;
     resolu = false;
+    document.getElementById("pseudo").value = "";
 
 }
 
@@ -211,7 +213,6 @@ function setTab() {
 function drawPuzzle() {
 
     context.clearRect(0, 0, tailleCanvas, tailleCanvas);
-    console.log("tailleTuile = " + tailleTuile);
 
     for (let i = 0; i < taille; ++i) {
         for (let j = 0; j < taille; ++j) {
@@ -235,12 +236,7 @@ function drawPuzzle() {
  * @returns {number}
  */
 function distance(x1, y1, x2, y2) {
-    console.log("x1 = " + x1);
-    console.log("y1 = " + y1);
-    console.log("x2 = " + x2);
-    console.log("y2 = " + y2);
     return Math.abs(x1 - x2) + Math.abs(y1 - y2);
-
 }
 
 /**
@@ -285,48 +281,61 @@ function demandePseudo() {
     });
 }
 
+/**
+ * Sauvegarde le score dans la base de données
+ */
 function sauvegarde() {
 
-    let pseudo = document.getElementById("pseudo").value;
+    if (resolu) {
 
-    if (pseudo.length == 0) {
-        setTimeout(function () {
-            errorPseudo.style.display = "block";
-            demandePseudo();
-        }, 1000);
-    } else {
+        let pseudo = document.getElementById("pseudo").value;
 
-        errorPseudo.style.display = "none";
+        if (pseudo.length == 0) {
+            setTimeout(function () {
+                errorPseudo.style.display = "block";
+                demandePseudo();
+            }, 1000);
+        } else {
 
-        xhr.onreadystatechange = function () {
-            if (this.readyState == 4 && this.status == 200) {
-                if (this.responseText == 1) {
-                    alert("Votre a été enregistré")
-                } else {
-                    alert("Erreur dans l'enregistrement, tant pis pour vous si c'était un bon score");
+            errorPseudo.style.display = "none";
+            resolu = false;
+
+            xhr.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    if (this.responseText == 1) {
+                        alert("Votre a été enregistré")
+                    } else {
+                        alert("Erreur dans l'enregistrement, tant pis pour vous si c'était un bon score");
+                    }
                 }
-            }
-        };
+            };
 
-        xhr.open('POST', '../backend/score.php', true);
-        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        xhr.send("pseudo=" + pseudo + "&min=" + min + "&sec=" + sec + "&taille=" + taille);
+            xhr.open('POST', '../backend/score.php', true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.send("pseudo=" + pseudo + "&min=" + min + "&sec=" + sec + "&taille=" + taille);
+
+        }
 
     }
 
 }
 
+/**
+ * Récupère les scores par rapport à la taille demandé
+ * @param t
+ */
 function getScore(t) {
 
     xhr.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-
+            let listScore = JSON.parse(this.responseText);
+            console.log(listScore);
         }
     };
 
     xhr.open('POST', '../backend/score.php', true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    xhr.send("taille=" + taille);
+    xhr.send("taille=" + t);
 }
 
 /**
