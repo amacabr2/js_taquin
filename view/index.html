@@ -30,9 +30,9 @@
                 </li>
                 <li class="menu2"><a href="#">Meilleurs scores</a>
                     <ul class="submenu">
-                        <li><a href="#">3x3</a></li>
-                        <li><a href="#">4x4</a></li>
-                        <li><a href="#">5x5</a></li>
+                        <li><a onclick="getScore(3)">3x3</a></li>
+                        <li><a onclick="getScore(4)">4x4</a></li>
+                        <li><a onclick="getScore(5)">5x5</a></li>
                     </ul>
                 </li>
                 <li class="menu3"><a data-toggle="modal" data-target="#choixImg">Choix de l'image</a></li>
@@ -60,7 +60,41 @@
                         </div>
 
                         <div class="modal-footer">
-                            <button class="btn btn-alert" data-dismiss="modal">Fermer</button>
+                            <button class="btn btn-danger" data-dismiss="modal">Fermer</button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div id="enregistrePseudo" class="modal fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+                <div class="modal-dialog">
+
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close" aria-hidden="true">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel2">Entrez votre pseudo</h4>
+                        </div>
+
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <input id="pseudo" name="pseudo" type="text" class="form-control" placeholder="Votre pseudo">
+                                <div id="errorPseudo" class="label label-danger">Le pseudo est vide</div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button class="btn btn-danger" data-dismiss="modal">Fermer</button>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button class="btn btn-primary" data-dismiss="modal" onclick="sauvegarde()">Valider</button>
                         </div>
 
                     </div>

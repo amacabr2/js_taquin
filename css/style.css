@@ -14,16 +14,19 @@ body {
 }
 
 #plateau {
-    margin: 5px;
     border-radius: 10px;
     background-size: cover;
-    margin-bottom: 20px;
+    margin: 5px 5px 20px;
 }
 
 #puzzle {
     border-radius: 10px;
     width: 100%;
     height: 100%;
+}
+
+#errorPseudo {
+    display: none;
 }
 
 .img-choix {

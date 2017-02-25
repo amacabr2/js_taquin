@@ -3,6 +3,7 @@ const plateauImg = document.getElementById('plateau-img');
 const choixImage = document.getElementById('choixImage');
 const listImgInModal = document.getElementById('listImgInModal');
 const info = document.getElementById('info');
+const errorPseudo = document.getElementById("errorPseudo");
 const puzzle = document.getElementById('puzzle');
 const context = puzzle.getContext('2d');
 
@@ -25,7 +26,7 @@ let resolu = false;
 puzzle.onclick = function(e) {
     caseClique.x = Math.floor((e.pageX - 410) / tailleTuile);
     caseClique.y = Math.floor((e.pageY - 90) / tailleTuile);
-    console.log("e.pageX = " + e.pageX);
+   /* console.log("e.pageX = " + e.pageX);
     console.log("e.pageY = " + e.pageY);
     console.log("offsetLeft = " + this.offsetLeft);
     console.log("offsetTop = " + this.offsetLeft);
@@ -33,13 +34,15 @@ puzzle.onclick = function(e) {
     console.log("caseClique.y = " + caseClique.y);
     console.log("caseVide.x = " + caseVide.x);
     console.log("caseVide.y = " + caseVide.y);
-    console.log("------------------------------------------------------------------------------------------------------");
+    console.log("------------------------------------------------------------------------------------------------------");*/
     if (distance(caseClique.x, caseClique.y, caseVide.x, caseVide.y) == 1) {
         deplaceTuile(caseVide, caseClique);
         drawPuzzle();
     }
     if (resolu) {
         //setTimeout(function() {alert("You resolu it!");}, 500);
+        clear();
+        remplirPlateau();
         demandePseudo();
     }
 };
@@ -50,6 +53,7 @@ puzzle.onclick = function(e) {
 function register() {
 
     info.innerText = "Bienvenue sur le jeu DragonBall Taquin";
+    errorPseudo.style.display = "none";
     img = new Image();
     imgChoisit = "choix1.jpeg";
 
@@ -58,6 +62,7 @@ function register() {
 
     rechercheImg();
     choixImg(imgChoisit);
+    setTab();
 
 }
 
@@ -108,9 +113,9 @@ function addImgInModal(listImg) {
  * @param img
  */
 function choixImg(img) {
+    clear();
     imgChoisit = img;
     remplirPlateau();
-    setTaille(taille)
 }
 
 /**
@@ -129,11 +134,7 @@ function setTaille(t) {
 
     taille = t;
     tailleTuile = tailleCanvas / taille;
-    clearTimeout(t1);
-    clearTimeout(t2);
-    clearTimeout(t3);
-    clearTimeout(t4);
-    clearTimeout(chrono);
+    clear();
     sec = 0;
     min = 0;
     info.innerText = "Attention le jeu va bientôt commencer, mémorisez bien l'image.";
@@ -200,6 +201,7 @@ function setTab() {
 
     caseVide.x = tabPartImg[taille - 1][taille - 1].x;
     caseVide.y = tabPartImg[taille - 1][taille - 1].y;
+    resolu = false;
 
 }
 
@@ -273,3 +275,67 @@ function isGagne() {
     resolu = flag;
 }
 
+/**
+ * Affiche le modal bootstrap pour de mander le pseudo du joueur
+ */
+function demandePseudo() {
+    $(function () {
+        console.log("demende pseudo");
+        $("#enregistrePseudo").modal("show");
+    });
+}
+
+function sauvegarde() {
+
+    let pseudo = document.getElementById("pseudo").value;
+
+    if (pseudo.length == 0) {
+        setTimeout(function () {
+            errorPseudo.style.display = "block";
+            demandePseudo();
+        }, 1000);
+    } else {
+
+        errorPseudo.style.display = "none";
+
+        xhr.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                if (this.responseText == 1) {
+                    alert("Votre a été enregistré")
+                } else {
+                    alert("Erreur dans l'enregistrement, tant pis pour vous si c'était un bon score");
+                }
+            }
+        };
+
+        xhr.open('POST', '../backend/score.php', true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.send("pseudo=" + pseudo + "&min=" + min + "&sec=" + sec + "&taille=" + taille);
+
+    }
+
+}
+
+function getScore(t) {
+
+    xhr.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+
+        }
+    };
+
+    xhr.open('POST', '../backend/score.php', true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.send("taille=" + taille);
+}
+
+/**
+ * Arrète tous les timeout en cour
+ */
+function clear() {
+    clearTimeout(t1);
+    clearTimeout(t2);
+    clearTimeout(t3);
+    clearTimeout(t4);
+    clearTimeout(chrono);
+}
