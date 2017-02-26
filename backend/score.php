@@ -9,7 +9,7 @@
         $sec = htmlspecialchars($_POST['sec']);
         $taille = htmlspecialchars($_POST['taille']);
 
-        $temps = (string)$min . ":" . (string)$sec;
+        $temps = (int)$min * 60 + (int)$sec;
 
         if (enregisterScore($bdd, $pseudo, $temps, $taille)) echo 1;
         else echo 0;
@@ -58,7 +58,9 @@
     function recupererScoreByTaille($bdd, $taille) {
 
         $rq = $bdd->prepare("
-            select * from score where taille = :taille
+            select * from score 
+            where taille = :taille
+            order by temps
         ");
 
         $rq->execute(array(

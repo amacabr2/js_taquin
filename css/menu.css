@@ -30,6 +30,7 @@
 
 .nav li {
     list-style-type: none;
+    cursor: pointer;
 }
 
 .submenu {
@@ -59,6 +60,7 @@
     font-size: 13px;
     color: #222538;
     width: 270px;
+    cursor: pointer;
 }
 
 .menu1:hover {

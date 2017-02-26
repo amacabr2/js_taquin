@@ -276,7 +276,6 @@ function isGagne() {
  */
 function demandePseudo() {
     $(function () {
-        console.log("demende pseudo");
         $("#enregistrePseudo").modal("show");
     });
 }
@@ -328,14 +327,91 @@ function getScore(t) {
 
     xhr.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-            let listScore = JSON.parse(this.responseText);
-            console.log(listScore);
+            afficheScore(JSON.parse(this.responseText), t);
         }
     };
 
     xhr.open('POST', '../backend/score.php', true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhr.send("taille=" + t);
+}
+
+/**
+ * Affiche les meilleurs scores dans un modal
+ * @param tab
+ */
+function afficheScore(tab, t) {
+
+    console.log(tab);
+
+    const meileurScore = document.getElementById("meileurScore");
+    const myModalLabel3 = document.getElementById("myModalLabel3");
+
+    meileurScore.innerHTML = "";
+
+    let row = document.createElement('div');
+    row.className = "row";
+
+    let col = document.createElement('div');
+    col.className = "col-offset-lg-2 col-lg-8";
+    col.style.width = '100%';
+
+    let table = document.createElement('table');
+    table.className = "table table-striped table-bordered";
+    table.style.textAlign = "center";
+
+    let thead = document.createElement('thead');
+    thead.innerHTML = `
+        <tr>
+            <th class="center">Place</th>
+            <th class="center">Pseudo</th>
+            <th class="center">Temps</th>
+        </tr>
+    `;
+
+    let tbody = document.createElement('tbody');
+
+    for (let i = 0; i < 3; i++) {
+
+        let tr = document.createElement('tr');
+
+        if (tab[i] != undefined) {
+
+            let tdPlace = document.createElement('td');
+            tdPlace.innerText = (i + 1);
+
+            let tdPseudo = document.createElement('td');
+            tdPseudo.innerText = tab[i]['pseudo'];
+
+            let tdTemps = document.createElement('td');
+            tdTemps.innerText = tab[i]['temps'];
+
+            tr.appendChild(tdPlace);
+            tr.appendChild(tdPseudo);
+            tr.appendChild(tdTemps);
+
+        } else {
+            let tdVide = document.createElement('td');
+            tdVide.setAttribute('colspan', '3');
+            tdVide.innerText = " - ";
+            tr.appendChild(tdVide);
+        }
+
+       tbody.appendChild(tr);
+
+    }
+
+    table.appendChild(thead);
+    table.appendChild(tbody);
+    col.appendChild(table);
+    row.appendChild(col);
+    meileurScore.appendChild(row);
+    myModalLabel3.innerText = "Meilleur score taille " + t;
+
+    $(function () {
+        $("#afficheScore").modal("show");
+    });
+
 }
 
 /**
