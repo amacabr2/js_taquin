@@ -115,6 +115,7 @@ function addImgInModal(listImg) {
  */
 function choixImg(img) {
     clear();
+    info.innerText = "Bienvenue sur le jeu DragonBall Taquin";
     imgChoisit = img;
     remplirPlateau();
 }
