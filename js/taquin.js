@@ -24,7 +24,7 @@ let margeY;
 // Détecte le redimensionnement de la page
 window.onresize = function () {
     margeX = puzzle.offsetParent.offsetLeft + puzzle.offsetLeft;
-    margeY = puzzle.offsetParent.offsetTop;
+    margeY = puzzle.offsetParent.offsetTop + puzzle.offsetTop;
 };
 
 // Suit le mouvement de la souris pour savoir ou on clique
