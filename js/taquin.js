@@ -1,5 +1,3 @@
-const plateau = document.getElementById('plateau');
-const choixImage = document.getElementById('choixImage');
 const listImgInModal = document.getElementById('listImgInModal');
 const info = document.getElementById('info');
 const errorPseudo = document.getElementById("errorPseudo");
@@ -20,12 +18,20 @@ let taille = 4;
 let tailleCanvas = puzzle.width;
 let tailleTuile = tailleCanvas / taille;
 let resolu = false;
+let margeX;
+let margeY;
+
+// Détecte le redimensionnement de la page
+window.onresize = function () {
+    margeX = puzzle.offsetParent.offsetLeft + puzzle.offsetLeft;
+    margeY = puzzle.offsetParent.offsetTop;
+};
 
 // Suit le mouvement de la souris pour savoir ou on clique
 puzzle.onclick = function(e) {
 
-    caseClique.x = Math.floor((e.pageX - 410) / tailleTuile);
-    caseClique.y = Math.floor((e.pageY - 90) / tailleTuile);
+    caseClique.x = Math.floor((e.pageX - margeX) / tailleTuile);
+    caseClique.y = Math.floor((e.pageY - margeY) / tailleTuile);
 
     if (distance(caseClique.x, caseClique.y, caseVide.x, caseVide.y) == 1) {
         deplaceTuile(caseVide, caseClique);
@@ -49,6 +55,8 @@ function register() {
     errorPseudo.style.display = "none";
     img = new Image();
     imgChoisit = "choix1.jpeg";
+    margeX = 410;
+    margeY = 90;
 
     if (window.XMLHttpRequest) xhr = new XMLHttpRequest();
     else if (window.ActiveXObject) xhr = new ActiveXObject("Microsoft.XMLHTTP");
@@ -124,6 +132,7 @@ function choixImg(img) {
  * Ajoute l'image choisit au plateau
  */
 function remplirPlateau() {
+    console.log(imgChoisit);
     img.src = `../img/jeu/${imgChoisit}`;
     context.drawImage(img, 0, 0);
 }
