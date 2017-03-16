@@ -3,6 +3,7 @@ const info = document.getElementById('info');
 const errorPseudo = document.getElementById("errorPseudo");
 const puzzle = document.getElementById('puzzle');
 const context = puzzle.getContext('2d');
+const GAUCHE = 37, HAUT = 38, DROITE = 39, BAS = 40;
 
 let xhr;
 let sec = 0;
@@ -28,7 +29,7 @@ window.onresize = function () {
 };
 
 // Suit le mouvement de la souris pour savoir ou on clique
-puzzle.onclick = function(e) {
+puzzle.onclick = function (e) {
 
     caseClique.x = Math.floor((e.pageX - margeX) / tailleTuile);
     caseClique.y = Math.floor((e.pageY - margeY) / tailleTuile);
@@ -42,6 +43,8 @@ puzzle.onclick = function(e) {
         clear();
         remplirPlateau();
         demandePseudo();
+        window.ctrlTouche = undefined;
+        resolu = true;
     }
 
 };
@@ -57,6 +60,7 @@ function register() {
     imgChoisit = "choix1.jpeg";
     margeX = 410;
     margeY = 90;
+    resolu = false;
 
     if (window.XMLHttpRequest) xhr = new XMLHttpRequest();
     else if (window.ActiveXObject) xhr = new ActiveXObject("Microsoft.XMLHTTP");
@@ -64,6 +68,70 @@ function register() {
     rechercheImg();
     choixImg(imgChoisit);
     setTab();
+
+}
+
+/**
+ * Permet de gérer les touches du claviers
+ */
+function ctrlTouche() {
+
+    // Permet de jouer avec les touches de la souris
+    window.onkeyup = function (e) {
+
+        let tps;
+
+        switch (e.keyCode) {
+            case GAUCHE:
+                console.log("G");
+                if (caseVide.x != 0) {
+                    tps = tabPartImg[caseVide.x][caseVide.y];
+                    tabPartImg[caseVide.x][caseVide.y] = tabPartImg[caseVide.x - 1][caseVide.y];
+                    tabPartImg[caseVide.x - 1][caseVide.y] = tps;
+                    caseVide.x--;
+                }
+                break;
+            case HAUT:
+                console.log("H");
+                if (caseVide.y != 0) {
+                    tps = tabPartImg[caseVide.x][caseVide.y];
+                    tabPartImg[caseVide.x][caseVide.y] = tabPartImg[caseVide.x][caseVide.y - 1];
+                    tabPartImg[caseVide.x][caseVide.y - 1] = tps;
+                    caseVide.y--;
+                }
+                break;
+            case DROITE:
+                console.log("D");
+                if (caseVide.x != tabPartImg.length - 1) {
+                    tps = tabPartImg[caseVide.x][caseVide.y];
+                    tabPartImg[caseVide.x][caseVide.y] = tabPartImg[caseVide.x + 1][caseVide.y];
+                    tabPartImg[caseVide.x + 1][caseVide.y] = tps;
+                    caseVide.x++;
+                }
+                break;
+            case BAS:
+                console.log("B");
+                if (caseVide.y != tabPartImg.length - 1) {
+                    tps = tabPartImg[caseVide.x][caseVide.y];
+                    tabPartImg[caseVide.x][caseVide.y] = tabPartImg[caseVide.x][caseVide.y + 1];
+                    tabPartImg[caseVide.x][caseVide.y + 1] = tps;
+                    caseVide.y++;
+                }
+                break;
+        }
+
+        drawPuzzle();
+        isGagne();
+
+        if (resolu) {
+            clear();
+            remplirPlateau();
+            demandePseudo();
+            window.ctrlTouche = undefined;
+            resolu = true;
+        }
+
+    };
 
 }
 
@@ -132,7 +200,6 @@ function choixImg(img) {
  * Ajoute l'image choisit au plateau
  */
 function remplirPlateau() {
-    console.log(imgChoisit);
     img.src = `../img/jeu/${imgChoisit}`;
     context.drawImage(img, 0, 0);
 }
@@ -149,6 +216,7 @@ function setTaille(t) {
     sec = 0;
     min = 0;
     info.innerText = "Attention le jeu va bientôt commencer, mémorisez bien l'image.";
+    resolu = false;
 
     t1 = setTimeout(function () {
         info.innerText = "A vos marque...";
@@ -160,6 +228,7 @@ function setTaille(t) {
                     startChrono();
                     setTab();
                     drawPuzzle();
+                    ctrlTouche();
                 }, 1000);
             }, 1000);
         }, 1000);
@@ -170,7 +239,7 @@ function setTaille(t) {
 /**
  * S'occupe du chrono
  */
-function startChrono(){
+function startChrono() {
 
     sec++;
     if (sec > 59) {
@@ -186,7 +255,7 @@ function startChrono(){
     if (sec < 10) s_sec = "0" + sec;
     else s_sec = sec;
 
-    info.innerHTML =  "<b>Chrono : </b><br>" + s_min + ":" + s_sec;
+    info.innerHTML = "<b>Chrono : </b><br>" + s_min + ":" + s_sec;
     chrono = setTimeout("startChrono()", 1000);
 
 }
@@ -228,7 +297,7 @@ function drawPuzzle() {
         for (let j = 0; j < taille; ++j) {
             let x = tabPartImg[i][j].x;
             let y = tabPartImg[i][j].y;
-            if(i != caseVide.x || j != caseVide.y || resolu == true) {
+            if (i != caseVide.x || j != caseVide.y || resolu == true) {
                 context.drawImage(img, x * tailleTuile, y * tailleTuile, tailleTuile, tailleTuile, i * tailleTuile, j * tailleTuile, tailleTuile, tailleTuile);
             }
         }
@@ -273,7 +342,7 @@ function isGagne() {
     let flag = true;
     for (let i = 0; i < taille; ++i) {
         for (let j = 0; j < taille; ++j) {
-            if (tabPartImg[i][j].x != i ||tabPartImg[i][j].y != j) {
+            if (tabPartImg[i][j].x != i || tabPartImg[i][j].y != j) {
                 flag = false;
             }
         }
@@ -407,7 +476,7 @@ function afficheScore(tab, t) {
             tr.appendChild(tdVide);
         }
 
-       tbody.appendChild(tr);
+        tbody.appendChild(tr);
 
     }
 
