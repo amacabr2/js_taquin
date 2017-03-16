@@ -18,9 +18,15 @@ let t1, t2, t3, t4;
 let taille = 4;
 let tailleCanvas = puzzle.width;
 let tailleTuile = tailleCanvas / taille;
-let resolu = false;
+let resolu = true;
+let afficheModal = false;
 let margeX;
 let margeY;
+
+// Empêcher le modal de réapparaitre
+window.onclick = function () {
+    afficheModal = false;
+};
 
 // Détecte le redimensionnement de la page
 window.onresize = function () {
@@ -42,9 +48,8 @@ puzzle.onclick = function (e) {
     if (resolu) {
         clear();
         remplirPlateau();
-        demandePseudo();
         window.ctrlTouche = undefined;
-        resolu = true;
+        demandePseudo();
     }
 
 };
@@ -60,7 +65,7 @@ function register() {
     imgChoisit = "choix1.jpeg";
     margeX = 410;
     margeY = 90;
-    resolu = false;
+    resolu = true;
 
     if (window.XMLHttpRequest) xhr = new XMLHttpRequest();
     else if (window.ActiveXObject) xhr = new ActiveXObject("Microsoft.XMLHTTP");
@@ -71,6 +76,10 @@ function register() {
 
 }
 
+function setNoAfficheModal() {
+    afficheModal = false;
+}
+
 /**
  * Permet de gérer les touches du claviers
  */
@@ -79,56 +88,58 @@ function ctrlTouche() {
     // Permet de jouer avec les touches de la souris
     window.onkeyup = function (e) {
 
+        console.log(resolu);
+
         let tps;
 
-        switch (e.keyCode) {
-            case GAUCHE:
-                console.log("G");
-                if (caseVide.x != 0) {
-                    tps = tabPartImg[caseVide.x][caseVide.y];
-                    tabPartImg[caseVide.x][caseVide.y] = tabPartImg[caseVide.x - 1][caseVide.y];
-                    tabPartImg[caseVide.x - 1][caseVide.y] = tps;
-                    caseVide.x--;
-                }
-                break;
-            case HAUT:
-                console.log("H");
-                if (caseVide.y != 0) {
-                    tps = tabPartImg[caseVide.x][caseVide.y];
-                    tabPartImg[caseVide.x][caseVide.y] = tabPartImg[caseVide.x][caseVide.y - 1];
-                    tabPartImg[caseVide.x][caseVide.y - 1] = tps;
-                    caseVide.y--;
-                }
-                break;
-            case DROITE:
-                console.log("D");
-                if (caseVide.x != tabPartImg.length - 1) {
-                    tps = tabPartImg[caseVide.x][caseVide.y];
-                    tabPartImg[caseVide.x][caseVide.y] = tabPartImg[caseVide.x + 1][caseVide.y];
-                    tabPartImg[caseVide.x + 1][caseVide.y] = tps;
-                    caseVide.x++;
-                }
-                break;
-            case BAS:
-                console.log("B");
-                if (caseVide.y != tabPartImg.length - 1) {
-                    tps = tabPartImg[caseVide.x][caseVide.y];
-                    tabPartImg[caseVide.x][caseVide.y] = tabPartImg[caseVide.x][caseVide.y + 1];
-                    tabPartImg[caseVide.x][caseVide.y + 1] = tps;
-                    caseVide.y++;
-                }
-                break;
+        if (!resolu) {
+
+            switch (e.keyCode) {
+                case GAUCHE:
+                    if (caseVide.x != 0) {
+                        tps = tabPartImg[caseVide.x][caseVide.y];
+                        tabPartImg[caseVide.x][caseVide.y] = tabPartImg[caseVide.x - 1][caseVide.y];
+                        tabPartImg[caseVide.x - 1][caseVide.y] = tps;
+                        caseVide.x--;
+                    }
+                    break;
+                case HAUT:
+                    if (caseVide.y != 0) {
+                        tps = tabPartImg[caseVide.x][caseVide.y];
+                        tabPartImg[caseVide.x][caseVide.y] = tabPartImg[caseVide.x][caseVide.y - 1];
+                        tabPartImg[caseVide.x][caseVide.y - 1] = tps;
+                        caseVide.y--;
+                    }
+                    break;
+                case DROITE:
+                    if (caseVide.x != tabPartImg.length - 1) {
+                        tps = tabPartImg[caseVide.x][caseVide.y];
+                        tabPartImg[caseVide.x][caseVide.y] = tabPartImg[caseVide.x + 1][caseVide.y];
+                        tabPartImg[caseVide.x + 1][caseVide.y] = tps;
+                        caseVide.x++;
+                    }
+                    break;
+                case BAS:
+                    if (caseVide.y != tabPartImg.length - 1) {
+                        tps = tabPartImg[caseVide.x][caseVide.y];
+                        tabPartImg[caseVide.x][caseVide.y] = tabPartImg[caseVide.x][caseVide.y + 1];
+                        tabPartImg[caseVide.x][caseVide.y + 1] = tps;
+                        caseVide.y++;
+                    }
+                    break;
+            }
+
+            drawPuzzle();
+            isGagne();
+
         }
 
-        drawPuzzle();
-        isGagne();
-
         if (resolu) {
+            afficheModal = true;
             clear();
             remplirPlateau();
-            demandePseudo();
             window.ctrlTouche = undefined;
-            resolu = true;
+            demandePseudo();
         }
 
     };
@@ -281,7 +292,6 @@ function setTab() {
 
     caseVide.x = tabPartImg[taille - 1][taille - 1].x;
     caseVide.y = tabPartImg[taille - 1][taille - 1].y;
-    resolu = false;
     document.getElementById("pseudo").value = "";
 
 }
@@ -354,9 +364,11 @@ function isGagne() {
  * Affiche le modal bootstrap pour de mander le pseudo du joueur
  */
 function demandePseudo() {
-    $(function () {
-        $("#enregistrePseudo").modal("show");
-    });
+    if (afficheModal) {
+        $(function () {
+            $("#enregistrePseudo").modal("show");
+        });
+    }
 }
 
 /**
@@ -376,7 +388,7 @@ function sauvegarde() {
         } else {
 
             errorPseudo.style.display = "none";
-            resolu = false;
+            afficheModal = false;
 
             xhr.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
