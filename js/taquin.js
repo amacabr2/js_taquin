@@ -18,14 +18,13 @@ let t1, t2, t3, t4;
 let taille = 4;
 let tailleCanvas = puzzle.width;
 let tailleTuile = tailleCanvas / taille;
-let resolu = true;
-let afficheModal = false;
+let resolu = true, jeu = false;
 let margeX;
 let margeY;
 
 // Empêcher le modal de réapparaitre
 window.onclick = function () {
-    afficheModal = false;
+    if (resolu) setNoAfficheModal();
 };
 
 // Détecte le redimensionnement de la page
@@ -77,7 +76,8 @@ function register() {
 }
 
 function setNoAfficheModal() {
-    afficheModal = false;
+    jeu = false;
+    console.log(jeu);
 }
 
 /**
@@ -135,7 +135,6 @@ function ctrlTouche() {
         }
 
         if (resolu) {
-            afficheModal = true;
             clear();
             remplirPlateau();
             window.ctrlTouche = undefined;
@@ -236,6 +235,7 @@ function setTaille(t) {
             t3 = setTimeout(function () {
                 info.innerText = "...partezzzzzz!!!!!!!!!!!!!!!!";
                 t4 = setTimeout(function () {
+                    jeu = true;
                     startChrono();
                     setTab();
                     drawPuzzle();
@@ -364,7 +364,8 @@ function isGagne() {
  * Affiche le modal bootstrap pour de mander le pseudo du joueur
  */
 function demandePseudo() {
-    if (afficheModal) {
+    console.log(jeu);
+    if (jeu) {
         $(function () {
             $("#enregistrePseudo").modal("show");
         });
@@ -388,15 +389,15 @@ function sauvegarde() {
         } else {
 
             errorPseudo.style.display = "none";
-            afficheModal = false;
 
             xhr.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
                     if (this.responseText == 1) {
-                        alert("Votre a été enregistré")
+                        alert("Votre a été enregistré");
                     } else {
                         alert("Erreur dans l'enregistrement, tant pis pour vous si c'était un bon score");
                     }
+                    jeu = false;
                 }
             };
 
